@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Be My Valentine?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        background-color: #fff1f2; /* Rose 50 */
+        overflow: hidden;
+      }
+
+      /* Continuous Background Hearts */
+      .bg-heart {
+        position: absolute;
+        color: #fecdd3; /* Rose 200 */
+        user-select: none;
+        pointer-events: none;
+        z-index: 0;
+        animation: floatUp linear infinite;
+      }
+
+      @keyframes floatUp {
+        0% {
+          transform: translateY(110vh) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.8;
+        }
+        90% {
+          opacity: 0.8;
+        }
+        100% {
+          transform: translateY(-20vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+      }
+    </style>
+  </head>
+  <body class="h-screen flex items-center justify-center">
+    <div id="heart-bg" class="fixed inset-0 pointer-events-none"></div>
+
+    <div
+      class="glass-card p-10 rounded-3xl shadow-2xl text-center z-10 max-w-sm mx-4 transform transition-all duration-500"
+    >
+      <div
+        id="gif-container"
+        class="mb-4 h-44 flex items-center justify-center"
+      >
+        <img
+          id="valentine-gif"
+          src="https://i.makeagif.com/media/8-14-2024/Gs6Q4I.gif"
+          alt="Cute Bear"
+          class="h-full object-contain"
+        />
+      </div>
+
+      <h1
+        id="question"
+        class="text-3xl font-extrabold text-rose-600 mb-8 drop-shadow-sm"
+      >
+        Will you be my Valentine sweetheart?
+      </h1>
+
+      <div id="btn-wrapper" class="flex justify-center items-center gap-6">
+        <button
+          id="yesBtn"
+          class="bg-rose-500 hover:bg-rose-600 text-white px-10 py-3 rounded-full font-bold text-lg shadow-lg hover:shadow-rose-300 transition-all transform hover:scale-110 active:scale-95"
+        >
+          Yes!
+        </button>
+        <button
+          id="noBtn"
+          class="bg-white text-rose-500 border-2 border-rose-200 px-8 py-3 rounded-full font-bold text-lg shadow-sm transition-all"
+        >
+          No
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const heartBg = document.getElementById("heart-bg");
+      const yesBtn = document.getElementById("yesBtn");
+      const noBtn = document.getElementById("noBtn");
+      const gif = document.getElementById("valentine-gif");
+      const question = document.getElementById("question");
+
+      // 1. Create Floating Background Hearts
+      function createBgHeart() {
+        const heart = document.createElement("div");
+        heart.classList.add("bg-heart");
+        heart.innerHTML = "❤️";
+
+        // Randomize size, position, and speed
+        const size = Math.random() * 30 + 10;
+        heart.style.fontSize = `${size}px`;
+        heart.style.left = Math.random() * 100 + "vw";
+
+        const duration = Math.random() * 10 + 10;
+        heart.style.animationDuration = `${duration}s`;
+
+        // Randomly blur some for depth
+        if (size < 20) heart.style.filter = "blur(1px)";
+
+        heartBg.appendChild(heart);
+
+        // Clean up
+        setTimeout(() => heart.remove(), duration * 1000);
+      }
+
+      // Generate initial hearts and then keep spawning
+      for (let i = 0; i < 20; i++) {
+        setTimeout(createBgHeart, Math.random() * 5000);
+      }
+      setInterval(createBgHeart, 800);
+
+      // 2. The Runaway "No" Button
+      noBtn.addEventListener("mouseover", () => {
+        const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+        const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+        noBtn.style.position = "fixed"; // Use fixed so it stays relative to viewport
+        noBtn.style.left = `${x}px`;
+        noBtn.style.top = `${y}px`;
+      });
+
+      // 3. Success State
+      yesBtn.addEventListener("click", () => {
+        question.innerHTML = "Yeyy! I'm so happy! ❤️";
+        gif.src =
+          "https://i.pinimg.com/originals/f5/e0/a5/f5e0a5e748b2dc73bdec6ba0aca0a083.gif";
+        noBtn.style.display = "none";
+        yesBtn.style.display = "none";
+
+        // Intensify hearts
+        setInterval(createBgHeart, 100);
+      });
+    </script>
+  </body>
+</html>
